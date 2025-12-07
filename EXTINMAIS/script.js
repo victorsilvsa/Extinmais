@@ -1507,7 +1507,7 @@ document.getElementById('archiveMonthBtn').addEventListener('click', async () =>
         const currentYear = now.getFullYear();
 
         // Get all inspections
-        const inspectionsSnapshot = await database.ref('inspections').once('value');
+        const inspectionsSnapshot = await database.ref('inspections'&&'orders').once('value');
         const allInspections = inspectionsSnapshot.val() || {};
 
         // Filter inspections from current month
