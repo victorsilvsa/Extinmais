@@ -414,22 +414,26 @@ function generateCompletePDF(data) {
 
     if (isMobile) {
         // -------------------------------------
-        // MOBILE: Um PDF por página
+        // MOBILE: Um conteúdo por PDF
         // -------------------------------------
         
-        // PDF 1 - Cliente e Certificado
+        // PDF 1 - Cliente
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateClientSection(data);
-
-        if (data.cert_tipo) {
-            html += generateCertificateSection(data);
-        }
-
         html += generatePDFFooter();
         html += `</div>`;
 
-        // PDF 2 - Bombas (se existir)
+        // PDF 2 - Certificado (se existir)
+        if (data.cert_tipo) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateCertificateSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // PDF 3 - Bombas (se existir)
         if (data.has_bombas) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -438,7 +442,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 3 - Hidrantes (se existir)
+        // PDF 4 - Hidrantes (se existir)
         if (data.has_hidrantes) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -447,7 +451,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 4 - Alarme (se existir)
+        // PDF 5 - Alarme (se existir)
         if (data.has_alarme) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -456,7 +460,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 5 - Extintores (se existir)
+        // PDF 6 - Extintores (se existir)
         if (data.has_extintores) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -465,19 +469,32 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 6 - Sinalização (se existir)
+        // PDF 7 - Sinalização Parte 1 (se existir)
         if (data.has_sinalizacao) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data);
+            html += generateSinalizacaoSection(data, 1);
+            html += generatePDFFooter();
+            html += `</div>`;
+            
+            // PDF 8 - Sinalização Parte 2
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateSinalizacaoSection(data, 2);
             html += generatePDFFooter();
             html += `</div>`;
         }
 
-        // PDF 7 - Conformidade + Assinatura
+        // PDF 9 - Conformidade
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateConformidadeSection(data);
+        html += generatePDFFooter();
+        html += `</div>`;
+
+        // PDF 10 - Assinatura
+        html += `<div class="pdf-page">`;
+        html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateSignaturesSection(data);
         html += generatePDFFooter();
         html += `</div>`;
@@ -547,14 +564,17 @@ function generateCompletePDF(data) {
         // Página 5 - Conformidade + Assinatura
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+
         html += generateConformidadeSection(data);
         html += generateSignaturesSection(data);
+
         html += generatePDFFooter();
         html += `</div>`;
     }
 
     return html;
 }
+
 
 // 2. PDF BOMBAS
 function generateBombasPDF(data) {
@@ -871,7 +891,7 @@ function generateExtintoresSection(data) {
 function generateSinalizacaoSection(data, parte = null) {
     const isMobile = window.innerWidth <= 768;
     
-    // Se não for mobile ou não especificar parte, retorna tudo
+    // DESKTOP ou sem especificar parte - retorna tudo junto
     if (!isMobile || parte === null) {
         let html = `
             <div class="pdf-section">
