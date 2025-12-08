@@ -1111,15 +1111,15 @@ function generateSignaturesSection(data) {
             <div style="text-align: center;">
               <div style="border-top: 2px solid #333; padding-top: 10px; margin-top: 60px;">
                 <strong style="color: #333;">Assinatura do Técnico</strong>
-                <p style="color: #666; font-size: 12px; margin-top: 5px;">${currentUser ? currentUser.nome : 'Técnico Responsável'}</p>
-                <p style="color: #666; font-size: 11px;">CNPJ: ${currentUser ? currentUser.cnpj : '__.___.___/____-__'}</p>
+                <p style="color: #666; font-size: 5px; margin-top: 5px;">${currentUser ? currentUser.nome : 'Técnico Responsável'}</p>
+                <p style="color: #666; font-size: 5px;">CNPJ: ${currentUser ? currentUser.cnpj : '__.___.___/____-__'}</p>
               </div>
             </div>
             <div style="text-align: center;">
               <div style="border-top: 2px solid #333; padding-top: 10px; margin-top: 60px;">
                 <strong style="color: #333;">Assinatura do Cliente</strong>
-                <p style="color: #666; font-size: 12px; margin-top: 5px;">${data.responsavel || 'Responsável pela Empresa'}</p>
-<p style="color: #666; font-size: 11px;">Endereço: ${data.endereco || 'Endereço não informado'}</p>
+                <p style="color: #666; font-size: 5px; margin-top: 5px;">${data.responsavel || 'Responsável pela Empresa'}</p>
+<p style="color: #666; font-size: 4px;">Endereço: ${data.endereco || 'Endereço não informado'}</p>
               </div>
             </div>
           </div>
