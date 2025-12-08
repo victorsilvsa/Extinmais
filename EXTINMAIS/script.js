@@ -1,5 +1,3 @@
-
-// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyA_jPOZqD37Efy_vlE-t-rpo5sf8Zuv-A0",
     authDomain: "checklist-3c94f.firebaseapp.com",
@@ -414,26 +412,29 @@ function generateCompletePDF(data) {
 
     if (isMobile) {
         // -------------------------------------
-        // MOBILE: Um conteúdo por PDF
+        // MOBILE: Um PDF por página
         // -------------------------------------
-        
-        // PDF 1 - Cliente
+
+        // PDF 1 - Cliente e Certificado
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateClientSection(data);
+
+
+
+
+        if (data.cert_tipo) {
+
+
+            html += generateCertificateSection(data);
+
+
+        }
+
         html += generatePDFFooter();
         html += `</div>`;
 
-        // PDF 2 - Certificado (se existir)
-        if (data.cert_tipo) {
-            html += `<div class="pdf-page">`;
-            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateCertificateSection(data);
-            html += generatePDFFooter();
-            html += `</div>`;
-        }
-
-        // PDF 3 - Bombas (se existir)
+        // PDF 2 - Bombas (se existir)
         if (data.has_bombas) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -442,7 +443,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 4 - Hidrantes (se existir)
+        // PDF 3 - Hidrantes (se existir)
         if (data.has_hidrantes) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -451,7 +452,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 5 - Alarme (se existir)
+        // PDF 4 - Alarme (se existir)
         if (data.has_alarme) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -460,7 +461,7 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 6 - Extintores (se existir)
+        // PDF 5 - Extintores (se existir)
         if (data.has_extintores) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -469,32 +470,32 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 7 - Sinalização Parte 1 (se existir)
+        // PDF 6 - Sinalização (se existir)
         if (data.has_sinalizacao) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data, 1);
-            html += generatePDFFooter();
-            html += `</div>`;
-            
-            // PDF 8 - Sinalização Parte 2
-            html += `<div class="pdf-page">`;
-            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data, 2);
+            html += generateSinalizacaoSection(data);
+
+
+
+
+
+
+
             html += generatePDFFooter();
             html += `</div>`;
         }
 
-        // PDF 9 - Conformidade
+        // PDF 7 - Conformidade + Assinatura
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateConformidadeSection(data);
-        html += generatePDFFooter();
-        html += `</div>`;
 
-        // PDF 10 - Assinatura
-        html += `<div class="pdf-page">`;
-        html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+
+
+
+
+
         html += generateSignaturesSection(data);
         html += generatePDFFooter();
         html += `</div>`;
@@ -503,7 +504,7 @@ function generateCompletePDF(data) {
         // -------------------------------------
         // DESKTOP: Agrupado como antes
         // -------------------------------------
-        
+
         // Página 1 - Cliente e Certificado
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
@@ -890,8 +891,8 @@ function generateExtintoresSection(data) {
 
 function generateSinalizacaoSection(data, parte = null) {
     const isMobile = window.innerWidth <= 768;
-    
-    // DESKTOP ou sem especificar parte - retorna tudo junto
+
+    // Se não for mobile ou não especificar parte, retorna tudo
     if (!isMobile || parte === null) {
         let html = `
             <div class="pdf-section">
@@ -1111,15 +1112,15 @@ function generateSignaturesSection(data) {
             <div style="text-align: center;">
               <div style="border-top: 2px solid #333; padding-top: 10px; margin-top: 60px;">
                 <strong style="color: #333;">Assinatura do Técnico</strong>
-                <p style="color: #666; font-size: 5px; margin-top: 5px;">${currentUser ? currentUser.nome : 'Técnico Responsável'}</p>
-                <p style="color: #666; font-size: 5px;">CNPJ: ${currentUser ? currentUser.cnpj : '__.___.___/____-__'}</p>
+                <p style="color: #666; font-size: 12px; margin-top: 5px;">${currentUser ? currentUser.nome : 'Técnico Responsável'}</p>
+                <p style="color: #666; font-size: 11px;">CNPJ: ${currentUser ? currentUser.cnpj : '__.___.___/____-__'}</p>
               </div>
             </div>
             <div style="text-align: center;">
               <div style="border-top: 2px solid #333; padding-top: 10px; margin-top: 60px;">
                 <strong style="color: #333;">Assinatura do Cliente</strong>
-                <p style="color: #666; font-size: 5px; margin-top: 5px;">${data.responsavel || 'Responsável pela Empresa'}</p>
-<p style="color: #666; font-size: 4px;">Endereço: ${data.endereco || 'Endereço não informado'}</p>
+                <p style="color: #666; font-size: 12px; margin-top: 5px;">${data.responsavel || 'Responsável pela Empresa'}</p>
+<p style="color: #666; font-size: 11px;">Endereço: ${data.endereco || 'Endereço não informado'}</p>
               </div>
             </div>
           </div>
