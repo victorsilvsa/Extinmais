@@ -714,24 +714,27 @@
       display: block;
   }
 
- #pdfPreview {
+
+#pdfPreview {
     background: #f8f9fa;
     padding: 20px;
-    width: 794px;
+    width: 100%;
+    max-width: 794px;
     margin: 0 auto;
     line-height: 1.5;
     box-sizing: border-box;
     font-size: 11px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .pdf-page {
     background: #ffffff;
     color: #1a1a1a;
-    padding: 40px 45px;
+    padding: 30px 35px;
     width: 794px;
     min-width: 794px;
-    min-height: 1123px;
+    min-height: auto;
     margin: 0 auto 30px;
     line-height: 1.5;
     box-sizing: border-box;
@@ -757,10 +760,10 @@
 .pdf-page::after {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
     border: 2px solid #B32117;
     pointer-events: none;
 }
@@ -769,17 +772,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 12px 15px;
+    margin-bottom: 15px;
+    padding: 10px 12px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-left: 4px solid #B32117;
     border-radius: 3px;
     page-break-after: avoid;
     page-break-inside: avoid;
+    min-width: 0;
 }
 
 .pdf-logo {
     width: 110px;
+    min-width: 110px;
     height: 50px;
     display: flex;
     align-items: center;
@@ -804,6 +809,7 @@
 .pdf-title-section {
     text-align: right;
     flex-shrink: 0;
+    min-width: 0;
 }
 
 .pdf-main-title {
@@ -824,8 +830,8 @@
 }
 
 .pdf-section {
-    margin-bottom: 18px;
-    padding: 12px;
+    margin-bottom: 12px;
+    padding: 10px;
     background: #fafbfc;
     border-radius: 4px;
     border-left: 3px solid #D4C29A;
@@ -837,8 +843,8 @@
     font-size: 11px;
     color: #B32117;
     font-weight: bold;
-    margin-bottom: 10px;
-    padding: 6px 10px;
+    margin-bottom: 8px;
+    padding: 5px 8px;
     background: white;
     border-left: 3px solid #B32117;
     display: flex;
@@ -854,15 +860,17 @@
 
 .pdf-field {
     display: grid;
-    grid-template-columns: 170px 1fr;
-    padding: 7px 10px;
+    grid-template-columns: 180px 1fr;
+    padding: 6px 8px;
     margin-bottom: 1px;
     background: white;
     border-left: 2px solid #e9ecef;
-    font-size: 8px;
+    font-size: 10px;
     page-break-inside: avoid;
     break-inside: avoid;
     transition: all 0.2s;
+    gap: 10px;
+    align-items: start;
 }
 
 .pdf-field:hover {
@@ -877,6 +885,8 @@
     font-size: 10px;
     letter-spacing: 0.2px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .pdf-field-value {
@@ -884,26 +894,27 @@
     word-wrap: break-word;
     word-break: break-word;
     overflow-wrap: break-word;
+    hyphens: auto;
     font-size: 10px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .pdf-footer {
-    margin-top: 30px;
-    padding: 15px;
+    margin-top: 20px;
+    padding: 12px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-top: 2px solid #B32117;
     border-radius: 3px;
     text-align: center;
     color: #666;
-    font-size: 7px;
+    font-size: 8px;
     page-break-inside: avoid;
     break-inside: avoid;
 }
 
 .pdf-footer p {
-    margin: 4px 0;
-    line-height: 1.3;
+    margin: 3px 0;
+    line-height: 1.4;
 }
 
 .pdf-footer strong {
@@ -914,14 +925,39 @@
 /* Responsividade para Mobile */
 @media screen and (max-width: 834px) {
     #pdfPreview {
-        padding: 10px;
+        padding: 5px;
         width: 100%;
         overflow-x: scroll;
         -webkit-overflow-scrolling: touch;
     }
     
     .pdf-page {
-        margin: 0 0 20px 0;
+        margin: 0 0 15px 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media print {
+    #pdfPreview {
+        padding: 0;
+        width: 794px;
+        background: white;
+    }
+
+    .pdf-page {
+        width: 794px;
+        min-width: 794px;
+        margin: 0;
+        box-shadow: none;
+        min-height: 1123px;
+        padding: 40px 45px;
+    }
+
+    .pdf-page::after {
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
     }
 }
 
