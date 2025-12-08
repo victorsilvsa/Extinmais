@@ -905,151 +905,37 @@
     font-weight: 600;
 }
 
-/* Mobile - Layout Ultra Compacto para Muitos Dados */
+/* Mobile - Páginas lado a lado com scroll horizontal */
 @media screen and (max-width: 834px) {
     #pdfPreview {
         width: 100%;
-        padding: 5px;
-        background: #ffffff;
+        padding: 15px 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
     }
     
     .pdf-page {
-        width: 100%;
-        min-width: 100%;
-        padding: 12px 10px;
+        display: inline-block;
+        vertical-align: top;
+        white-space: normal;
+        width: 90vw;
+        max-width: 600px;
+        min-width: 320px;
         min-height: auto;
-        margin: 0 0 10px 0;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+        max-height: 85vh;
+        overflow-y: auto;
+        margin: 0;
+        flex-shrink: 0;
+        scroll-snap-align: start;
     }
 
-    .pdf-page::before {
-        height: 2px;
-    }
-
-    .pdf-page::after {
-        top: 6px;
-        left: 6px;
-        right: 6px;
-        bottom: 6px;
-        border-width: 1px;
-    }
-
-    .pdf-header {
-        flex-direction: column;
-        gap: 6px;
-        padding: 6px 8px;
-        margin-bottom: 10px;
-        border-left-width: 2px;
-    }
-
-    .pdf-logo {
-        width: 60px;
-        height: 30px;
-    }
-
-    .pdf-logo img {
-        max-width: 55px;
-        max-height: 28px;
-    }
-
-    .pdf-logo-text {
-        font-size: 10px;
-        letter-spacing: 0.4px;
-    }
-
-    .pdf-title-section {
-        text-align: center;
-    }
-
-    .pdf-main-title {
-        font-size: 9px;
-        white-space: normal;
-        line-height: 1.2;
-        letter-spacing: 0.2px;
-        margin-bottom: 2px;
-    }
-
-    .pdf-subtitle {
-        font-size: 7px;
-        white-space: normal;
-        line-height: 1.2;
-    }
-
-    .pdf-section {
-        margin-bottom: 6px;
-        padding: 5px 6px;
-        border-left-width: 2px;
-    }
-
-    .pdf-section-title {
-        font-size: 8px;
-        padding: 3px 5px;
-        margin-bottom: 4px;
-        gap: 3px;
-        border-left-width: 2px;
-        letter-spacing: 0.1px;
-    }
-
-    .pdf-section-title i {
-        font-size: 7px;
-    }
-
-    .pdf-field {
-        grid-template-columns: 1fr;
-        padding: 3px 5px;
-        gap: 1px;
-        margin-bottom: 0;
-        border-left-width: 1px;
-    }
-
-    .pdf-field-label {
-        font-size: 7px;
-        white-space: normal;
-        margin-bottom: 1px;
-        letter-spacing: 0.1px;
-        line-height: 1.2;
-    }
-
-    .pdf-field-value {
-        font-size: 8px;
-        line-height: 1.25;
-        padding-left: 6px;
-        color: #333;
-    }
-
-    .pdf-field-value .checkmark,
-    .pdf-field-value .crossmark {
-        font-size: 10px;
-    }
-
-    .pdf-footer {
-        margin-top: 10px;
-        padding: 6px 8px;
-        font-size: 6px;
-        border-top-width: 1px;
-    }
-
-    .pdf-footer p {
-        margin: 1px 0;
-        line-height: 1.2;
-    }
-
-    /* Assinaturas compactas no mobile */
-    .pdf-section:has(div[style*="grid-template-columns: 1fr 1fr"]) div[style*="grid-template-columns: 1fr 1fr"] {
-        grid-template-columns: 1fr !important;
-        gap: 15px !important;
-    }
-
-    .pdf-section:has(div[style*="grid-template-columns: 1fr 1fr"]) div[style*="margin-top: 60px"] {
-        margin-top: 25px !important;
-    }
-
-    .pdf-section:has(div[style*="grid-template-columns: 1fr 1fr"]) strong {
-        font-size: 8px;
-    }
-
-    .pdf-section:has(div[style*="grid-template-columns: 1fr 1fr"]) p {
-        font-size: 7px !important;
+    #pdfPreview {
+        scroll-snap-type: x mandatory;
     }
 }
 
@@ -1059,6 +945,8 @@
         padding: 0;
         width: 794px;
         background: white;
+        display: block;
+        overflow: visible;
     }
 
     .pdf-page {
@@ -1066,8 +954,11 @@
         margin: 0;
         box-shadow: none;
         page-break-after: always;
+        display: block;
     }
 }
+
+
 
 
   .checkmark {
