@@ -465,23 +465,16 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 6 - Sinalização Parte 1 (se existir)
+        // PDF 6 - Sinalização (se existir)
         if (data.has_sinalizacao) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data, 1); // Parte 1
-            html += generatePDFFooter();
-            html += `</div>`;
-            
-            // PDF 7 - Sinalização Parte 2
-            html += `<div class="pdf-page">`;
-            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data, 2); // Parte 2
+            html += generateSinalizacaoSection(data);
             html += generatePDFFooter();
             html += `</div>`;
         }
 
-        // PDF 8 - Conformidade + Assinatura
+        // PDF 7 - Conformidade + Assinatura
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateConformidadeSection(data);
@@ -562,8 +555,6 @@ function generateCompletePDF(data) {
 
     return html;
 }
-
-
 
 // 2. PDF BOMBAS
 function generateBombasPDF(data) {
