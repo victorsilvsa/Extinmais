@@ -942,8 +942,8 @@
     }
 
     .pdf-header {
-        padding: 6px 8px;
-        margin-bottom: 10px;
+        padding: 4px 6px;
+        margin-bottom: 7px;
         border-left-width: 2px;
     }
 
@@ -958,12 +958,12 @@
     }
 
     .pdf-logo-text {
-        font-size: 7px;
+        font-size: 6px;
         letter-spacing: 0.4px;
     }
 
     .pdf-main-title {
-        font-size: 8px;
+        font-size: 6px;
         letter-spacing: 0.2px;
     }
 
@@ -1082,7 +1082,7 @@
     .pdf-footer {
         margin-top: 10px;
         padding: 3px;
-        font-size: 3.5px;
+        font-size: 2px;
     }
 }
 
