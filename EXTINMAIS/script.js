@@ -408,7 +408,6 @@ document.getElementById('hasSinalizacao').addEventListener('change', (e) => {
 // PDF GENERATORS - Um para cada tipo de inspeção
 
 // 1. PDF COMPLETO
-
 function generateCompletePDF(data) {
     let html = '';
     const isMobile = window.innerWidth <= 768;
@@ -466,16 +465,23 @@ function generateCompletePDF(data) {
             html += `</div>`;
         }
 
-        // PDF 6 - Sinalização (se existir)
+        // PDF 6 - Sinalização Parte 1 (se existir)
         if (data.has_sinalizacao) {
             html += `<div class="pdf-page">`;
             html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-            html += generateSinalizacaoSection(data);
+            html += generateSinalizacaoSection(data, 1); // Parte 1
+            html += generatePDFFooter();
+            html += `</div>`;
+            
+            // PDF 7 - Sinalização Parte 2
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateSinalizacaoSection(data, 2); // Parte 2
             html += generatePDFFooter();
             html += `</div>`;
         }
 
-        // PDF 7 - Conformidade + Assinatura
+        // PDF 8 - Conformidade + Assinatura
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
         html += generateConformidadeSection(data);
