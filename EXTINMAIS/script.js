@@ -408,93 +408,156 @@ document.getElementById('hasSinalizacao').addEventListener('change', (e) => {
 // PDF GENERATORS - Um para cada tipo de inspeção
 
 // 1. PDF COMPLETO
+
 function generateCompletePDF(data) {
     let html = '';
+    const isMobile = window.innerWidth <= 768;
 
-    // -------------------------------------
-    // Página 1 - Cliente e Certificado
-    // -------------------------------------
-    html += `<div class="pdf-page">`;
-    html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-    html += generateClientSection(data);
-
-    if (data.cert_tipo) {
-        html += generateCertificateSection(data);
-    }
-
-    html += generatePDFFooter();
-    html += `</div>`;
-
-
-    // -------------------------------------
-    // Página 2 - Bombas e Hidrantes
-    // -------------------------------------
-    if (data.has_bombas || data.has_hidrantes) {
+    if (isMobile) {
+        // -------------------------------------
+        // MOBILE: Um PDF por página
+        // -------------------------------------
+        
+        // PDF 1 - Cliente e Certificado
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+        html += generateClientSection(data);
 
+        if (data.cert_tipo) {
+            html += generateCertificateSection(data);
+        }
+
+        html += generatePDFFooter();
+        html += `</div>`;
+
+        // PDF 2 - Bombas (se existir)
         if (data.has_bombas) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
             html += generateBombasSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
         }
 
+        // PDF 3 - Hidrantes (se existir)
         if (data.has_hidrantes) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
             html += generateHidrantesSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // PDF 4 - Alarme (se existir)
+        if (data.has_alarme) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateAlarmeSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // PDF 5 - Extintores (se existir)
+        if (data.has_extintores) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateExtintoresSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // PDF 6 - Sinalização (se existir)
+        if (data.has_sinalizacao) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+            html += generateSinalizacaoSection(data);
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // PDF 7 - Conformidade + Assinatura
+        html += `<div class="pdf-page">`;
+        html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+        html += generateConformidadeSection(data);
+        html += generateSignaturesSection(data);
+        html += generatePDFFooter();
+        html += `</div>`;
+
+    } else {
+        // -------------------------------------
+        // DESKTOP: Agrupado como antes
+        // -------------------------------------
+        
+        // Página 1 - Cliente e Certificado
+        html += `<div class="pdf-page">`;
+        html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+        html += generateClientSection(data);
+
+        if (data.cert_tipo) {
+            html += generateCertificateSection(data);
         }
 
         html += generatePDFFooter();
         html += `</div>`;
-    }
 
+        // Página 2 - Bombas e Hidrantes
+        if (data.has_bombas || data.has_hidrantes) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
 
-    // -------------------------------------
-    // Página 3 - Alarme e Extintores
-    // -------------------------------------
-    if (data.has_alarme || data.has_extintores) {
+            if (data.has_bombas) {
+                html += generateBombasSection(data);
+            }
+
+            if (data.has_hidrantes) {
+                html += generateHidrantesSection(data);
+            }
+
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // Página 3 - Alarme e Extintores
+        if (data.has_alarme || data.has_extintores) {
+            html += `<div class="pdf-page">`;
+            html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+
+            if (data.has_alarme) {
+                html += generateAlarmeSection(data);
+            }
+
+            if (data.has_extintores) {
+                html += generateExtintoresSection(data);
+            }
+
+            html += generatePDFFooter();
+            html += `</div>`;
+        }
+
+        // Página 4 - Sinalização
         html += `<div class="pdf-page">`;
         html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
 
-        if (data.has_alarme) {
-            html += generateAlarmeSection(data);
-        }
-
-        if (data.has_extintores) {
-            html += generateExtintoresSection(data);
+        if (data.has_sinalizacao) {
+            html += generateSinalizacaoSection(data);
         }
 
         html += generatePDFFooter();
         html += `</div>`;
+
+        // Página 5 - Conformidade + Assinatura
+        html += `<div class="pdf-page">`;
+        html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
+        html += generateConformidadeSection(data);
+        html += generateSignaturesSection(data);
+        html += generatePDFFooter();
+        html += `</div>`;
     }
-
-
-    // -------------------------------------
-    // Página 4 - Sinalização
-    // -------------------------------------
-    html += `<div class="pdf-page">`;
-    html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-
-    if (data.has_sinalizacao) {
-        html += generateSinalizacaoSection(data);
-    }
-
-    html += generatePDFFooter();
-    html += `</div>`;
-
-
-    // -------------------------------------
-    // Página 5 - Conformidade + Assinatura
-    // -------------------------------------
-    html += `<div class="pdf-page">`;
-    html += generatePDFHeader('RELATÓRIO COMPLETO DE INSPEÇÃO');
-
-    html += generateConformidadeSection(data);
-    html += generateSignaturesSection(data);
-
-    html += generatePDFFooter();
-    html += `</div>`;
-
 
     return html;
 }
+
+
 
 // 2. PDF BOMBAS
 function generateBombasPDF(data) {
@@ -1507,7 +1570,7 @@ document.getElementById('archiveMonthBtn').addEventListener('click', async () =>
         const currentYear = now.getFullYear();
 
         // Get all inspections
-        const inspectionsSnapshot = await database.ref('inspections'&&'orders').once('value');
+        const inspectionsSnapshot = await database.ref('inspections').once('value');
         const allInspections = inspectionsSnapshot.val() || {};
 
         // Filter inspections from current month
