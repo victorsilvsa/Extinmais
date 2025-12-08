@@ -915,13 +915,13 @@
 /* Mobile - Fontes e cards muito menores */
 @media screen and (max-width: 768px) {
     #pdfPreview {
-        font-size: 6px;
+        font-size: 4px;
         padding: 10px;
         min-width: 400px;
     }
 
     .pdf-page {
-        font-size: 6px;
+        font-size: 4px;
         width: 400px;
         min-width: 400px;
         padding: 18px 20px;
@@ -1000,7 +1000,7 @@
     }
 
     .pdf-field-value {
-        font-size: 5px;
+        font-size: 4px;
         line-height: 1.3;
     }
 
@@ -1019,13 +1019,13 @@
 
 @media screen and (max-width: 480px) {
     #pdfPreview {
-        font-size: 5px;
+        font-size: 4px;
         padding: 8px;
         min-width: 350px;
     }
 
     .pdf-page {
-        font-size: 5px;
+        font-size: 4px;
         width: 350px;
         min-width: 350px;
         padding: 15px 18px;
@@ -1043,11 +1043,11 @@
     }
 
     .pdf-logo-text {
-        font-size: 6px;
+        font-size: 5px;
     }
 
     .pdf-main-title {
-        font-size: 7px;
+        font-size: 5px;
     }
 
     .pdf-subtitle {
@@ -1072,16 +1072,16 @@
     }
 
     .pdf-field-label {
-        font-size: 4.5px;
+        font-size: 4px;
     }
 
     .pdf-field-value {
-        font-size: 4.5px;
+        font-size: 4px;
     }
 
     .pdf-footer {
         margin-top: 10px;
-        padding: 5px;
+        padding: 3px;
         font-size: 3.5px;
     }
 }
