@@ -661,12 +661,12 @@
         <div class="inspection-tab" data-section="sinalizacao">
           Sinalização
         </div>
-        <div class="inspection-tab" data-section="camera"><i class="fas fa-camera"></i> Câmera
+        <div class="inspection-tab" data-section="fotos">
+          Fotos
         </div>
         <div class="inspection-tab" data-section="conformidade">
           Conformidade
         </div>
-
       </div>
       <div class="inspection-content">
         <form id="inspectionForm"><!-- Cliente Section -->
@@ -1207,24 +1207,40 @@
               </div>
             </div>
           </div>
-          
-           <div class="inspection-section active" id="section-camera">
-   <h3><i class="fas fa-camera"></i> Câmera - Documentação Fotográfica</h3>
-   <div class="camera-controls"><button type="button" class="btn btn-primary" id="startCameraBtn"> <i class="fas fa-video"></i> Iniciar Câmera </button> <button type="button" class="btn btn-success" id="capturePhotoBtn" style="display: none;"> <i class="fas fa-camera"></i> Capturar Foto </button> <button type="button" class="btn btn-danger" id="stopCameraBtn" style="display: none;"> <i class="fas fa-stop"></i> Parar Câmera </button>
-   </div>
-   <div class="camera-preview-container">
-    <video id="cameraPreview" class="camera-preview" style="display: none;"></video>
-   </div>
-   <div class="photos-section">
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;"><i class="fas fa-images" style="font-size: 18px; color: #D4C29A;"></i>
-     <h4 style="margin: 0; color: #D4C29A; font-size: 16px; font-weight: 600;">Fotos Capturadas</h4>
-    </div>
-    <div id="photosGallery" class="photos-gallery">
-     <p class="empty-state">Nenhuma foto capturada ainda</p>
-    </div>
-   </div>
-  </div>
-  <canvas id="cameraCanvas" style="display: none;"></canvas>
+          <div class="inspection-section" id="section-fotos">
+            <h3>Captura de Fotos</h3>
+            <div class="camera-tab-content">
+              <div id="cameraContainer"
+                style="width: 100%; height: 250px; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid #D4C29A;">
+                <video id="videoStream" style="width: 100%; height: 100%; object-fit: cover;" playsinline></video>
+              </div>
+              <div class="camera-controls"
+                style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px;"><button
+                  type="button" class="btn-camera btn-warning" id="startCameraBtn" onclick="startCamera(event)"
+                  style="padding: 10px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #D4C29A; color: #000;">
+                  <i class="fas fa-play"></i> Iniciar </button> <button type="button" class="btn-camera btn-success"
+                  id="capturePhotoBtn" onclick="capturePhoto(event)" disabled
+                  style="padding: 10px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #2a7a3f; color: white;">
+                  <i class="fas fa-camera"></i> Capturar </button> <button type="button" class="btn-camera btn-outline"
+                  id="stopCameraBtn" onclick="stopCamera(event)" disabled
+                  style="padding: 10px 8px; border: 1px solid #D4C29A; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #2a2a2a; color: #D4C29A;">
+                  <i class="fas fa-stop"></i> Parar </button>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label style="font-weight: 600; color: #D4C29A; font-size: 13px;">Fotos Capturadas:</label> <span
+                  id="photoCount" style="font-size: 12px; font-weight: 600; color: #D4C29A;">0 foto(s)</span>
+              </div>
+              <div id="photosGallery"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-bottom: 12px;">
+              </div>
+              <div style="margin-top: 12px;"><label for="inspecaoObservacoes"
+                  style="display: block; font-weight: 600; color: #D4C29A; margin-bottom: 6px; font-size: 13px;">Observações
+                  (opcional)</label> <textarea id="inspecaoObservacoes" name="observacoes"
+                  style="width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #D4C29A; border-radius: 6px; color: #F5F5F5; font-size: 13px; font-family: inherit; resize: vertical; min-height: 60px;"
+                  placeholder="Descreva os detalhes observados..."></textarea>
+              </div>
+            </div>
+          </div>
           <!-- Conformidade Section -->
           <div class="inspection-section" id="section-conformidade">
             <h3>Conformidade Geral</h3>
