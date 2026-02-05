@@ -3164,69 +3164,41 @@ function generateSelectedPDF(type) {
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
   document.getElementById('pdfPreviewSection').classList.add('active');
 }
-
-let stream = null;
+// ===== VARIÁVEIS GLOBAIS DA CÂMERA =====
 let photos = [];
 
 // ===== FUNÇÕES DA CÂMERA =====
 
-// Iniciar Câmera
-async function startCamera(event) {
+// Abrir Câmera Nativa do Aparelho
+function openNativeCamera(event) {
   event.preventDefault();
   
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }
-    });
-    
-    const video = document.getElementById('videoStream');
-    video.srcObject = stream;
-    
-    document.getElementById('startCameraBtn').disabled = true;
-    document.getElementById('capturePhotoBtn').disabled = false;
-    document.getElementById('stopCameraBtn').disabled = false;
-  } catch (error) {
-    console.error('Erro ao acessar câmera:', error);
-    showToast('Não foi possível acessar a câmera', 'error');
-  }
-}
-
-// Capturar Foto
-function capturePhoto(event) {
-  event.preventDefault();
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment'; // Força câmera traseira
   
-  const video = document.getElementById('videoStream');
-  const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const photoData = event.target.result;
+        photos.push({
+          id: Date.now(),
+          data: photoData,
+          timestamp: new Date().toLocaleString('pt-BR')
+        });
+        
+        atualizarGaleria();
+        atualizarContador();
+        showToast('Foto capturada com sucesso!');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0);
-  
-  const photoData = canvas.toDataURL('image/jpeg', 0.9);
-  photos.push({
-    id: Date.now(),
-    data: photoData,
-    timestamp: new Date().toLocaleString('pt-BR')
-  });
-  
-  atualizarGaleria();
-  atualizarContador();
-  showToast('Foto capturada com sucesso!');
-}
-
-// Parar Câmera
-function stopCamera(event) {
-  event.preventDefault();
-  
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-  }
-  
-  document.getElementById('videoStream').srcObject = null;
-  document.getElementById('startCameraBtn').disabled = false;
-  document.getElementById('capturePhotoBtn').disabled = true;
-  document.getElementById('stopCameraBtn').disabled = true;
+  input.click();
 }
 
 // Atualizar Galeria
@@ -3316,6 +3288,7 @@ function limparTodasFotos() {
 function obterFotos() {
   return photos;
 }
+
 
 // ===== FINISH INSPECTION =====
 document.getElementById('finishInspectionBtn').addEventListener('click', async () => {
