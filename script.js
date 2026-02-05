@@ -1,14 +1,14 @@
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA_jPOZqD37Efy_vlE-t-rpo5sf8Zuv-A0",
-  authDomain: "checklist-3c94f.firebaseapp.com",
-  databaseURL: "https://checklist-3c94f-default-rtdb.firebaseio.com",
-  projectId: "checklist-3c94f",
-  storageBucket: "checklist-3c94f.firebasestorage.app",
-  messagingSenderId: "263286954300",
-  appId: "1:263286954300:web:e1f3c22499a65f8c0c2639",
-  measurementId: "G-LB7T6YWEG1"
+  apiKey: "AIzaSyBN0usBPCa5MOVpNZg9ylOCgM37U5h3S40",
+  authDomain: "aula-364b6.firebaseapp.com",
+  databaseURL: "https://aula-364b6-default-rtdb.firebaseio.com",
+  projectId: "aula-364b6",
+  storageBucket: "aula-364b6.firebasestorage.app",
+  messagingSenderId: "100369889714",
+  appId: "1:100369889714:web:303a5fa351443360ceccab",
+  measurementId: "G-W66SKC1HLN"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -1846,11 +1846,14 @@ async function selecionarCliente(id, tipo) {
   }
 }
 
-
 // Atualiza o botão de inspeção manual
 document.getElementById('manualInspectionBtn').addEventListener('click', () => {
   abrirModalSelecao();
 });
+
+
+
+
 
 document.getElementById('addCompanyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -1867,6 +1870,7 @@ document.getElementById('addCompanyForm').addEventListener('submit', async (e) =
   loadDashboard();
 });
 
+
 // Add Building Form Submit
 document.getElementById('addBuildingForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -1874,15 +1878,20 @@ document.getElementById('addBuildingForm').addEventListener('submit', async (e) 
   const formData = new FormData(e.target);
   const buildingData = Object.fromEntries(formData);
 
+  // Salva no Firebase
   await database.ref('buildings').push(buildingData);
 
   showToast('Prédio cadastrado com sucesso!');
   closeModal('addCompanyModal');
   e.target.reset();
 
+  // ALTERAÇÃO AQUI:
+  // Use loadCompanies() pois ela é a responsável por renderizar a lista no DOM
   loadCompanies();
   loadDashboard();
 });
+
+
 
 // Inspection Tabs
 document.querySelectorAll('.inspection-tab').forEach(tab => {
@@ -3156,8 +3165,159 @@ function generateSelectedPDF(type) {
   document.getElementById('pdfPreviewSection').classList.add('active');
 }
 
-// Finish Inspection
-// Finish Inspection
+let stream = null;
+let photos = [];
+
+// ===== FUNÇÕES DA CÂMERA =====
+
+// Iniciar Câmera
+async function startCamera(event) {
+  event.preventDefault();
+  
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }
+    });
+    
+    const video = document.getElementById('videoStream');
+    video.srcObject = stream;
+    
+    document.getElementById('startCameraBtn').disabled = true;
+    document.getElementById('capturePhotoBtn').disabled = false;
+    document.getElementById('stopCameraBtn').disabled = false;
+  } catch (error) {
+    console.error('Erro ao acessar câmera:', error);
+    showToast('Não foi possível acessar a câmera', 'error');
+  }
+}
+
+// Capturar Foto
+function capturePhoto(event) {
+  event.preventDefault();
+  
+  const video = document.getElementById('videoStream');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  
+  const photoData = canvas.toDataURL('image/jpeg', 0.9);
+  photos.push({
+    id: Date.now(),
+    data: photoData,
+    timestamp: new Date().toLocaleString('pt-BR')
+  });
+  
+  atualizarGaleria();
+  atualizarContador();
+  showToast('Foto capturada com sucesso!');
+}
+
+// Parar Câmera
+function stopCamera(event) {
+  event.preventDefault();
+  
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+  
+  document.getElementById('videoStream').srcObject = null;
+  document.getElementById('startCameraBtn').disabled = false;
+  document.getElementById('capturePhotoBtn').disabled = true;
+  document.getElementById('stopCameraBtn').disabled = true;
+}
+
+// Atualizar Galeria
+function atualizarGaleria() {
+  const gallery = document.getElementById('photosGallery');
+  gallery.innerHTML = '';
+  
+  photos.forEach((photo, index) => {
+    const div = document.createElement('div');
+    div.style.position = 'relative';
+    div.style.cursor = 'pointer';
+    
+    const img = document.createElement('img');
+    img.src = photo.data;
+    img.style.width = '100%';
+    img.style.height = '80px';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '6px';
+    img.style.border = '1px solid #D4C29A';
+    img.style.transition = 'all 0.2s';
+    
+    img.onmouseover = () => {
+      img.style.transform = 'scale(1.05)';
+      img.style.boxShadow = '0 0 8px rgba(212, 194, 154, 0.3)';
+    };
+    
+    img.onmouseout = () => {
+      img.style.transform = 'scale(1)';
+      img.style.boxShadow = 'none';
+    };
+    
+    // Botão deletar
+    const btnDelete = document.createElement('button');
+    btnDelete.innerHTML = '<i class="fas fa-trash"></i>';
+    btnDelete.style.position = 'absolute';
+    btnDelete.style.top = '2px';
+    btnDelete.style.right = '2px';
+    btnDelete.style.background = '#B32117';
+    btnDelete.style.color = 'white';
+    btnDelete.style.border = 'none';
+    btnDelete.style.borderRadius = '4px';
+    btnDelete.style.width = '24px';
+    btnDelete.style.height = '24px';
+    btnDelete.style.display = 'flex';
+    btnDelete.style.alignItems = 'center';
+    btnDelete.style.justifyContent = 'center';
+    btnDelete.style.cursor = 'pointer';
+    btnDelete.style.fontSize = '12px';
+    btnDelete.style.opacity = '0';
+    btnDelete.style.transition = 'opacity 0.2s';
+    
+    div.onmouseover = () => btnDelete.style.opacity = '1';
+    div.onmouseout = () => btnDelete.style.opacity = '0';
+    
+    btnDelete.onclick = (e) => {
+      e.stopPropagation();
+      deletarFoto(index);
+    };
+    
+    div.appendChild(img);
+    div.appendChild(btnDelete);
+    gallery.appendChild(div);
+  });
+}
+
+// Deletar Foto
+function deletarFoto(index) {
+  photos.splice(index, 1);
+  atualizarGaleria();
+  atualizarContador();
+}
+
+// Atualizar Contador
+function atualizarContador() {
+  const count = photos.length;
+  document.getElementById('photoCount').textContent = `${count} foto${count !== 1 ? '(s)' : ''}`;
+}
+
+// Limpar todas as fotos
+function limparTodasFotos() {
+  photos = [];
+  atualizarGaleria();
+  atualizarContador();
+}
+
+// Obter fotos (para salvar no BD)
+function obterFotos() {
+  return photos;
+}
+
+// ===== FINISH INSPECTION =====
 document.getElementById('finishInspectionBtn').addEventListener('click', async () => {
   const button = document.getElementById('finishInspectionBtn');
   button.disabled = true;
@@ -3183,12 +3343,17 @@ document.getElementById('finishInspectionBtn').addEventListener('click', async (
       tecnico_nome: currentUser.nome,
       data: new Date().toISOString(),
       completed: true,
-      tipo: window.ultimaEmpresaCadastrada?.tipo || 'empresa'
+      tipo: window.ultimaEmpresaCadastrada?.tipo || 'empresa',
+      observacoes: document.getElementById('inspecaoObservacoes')?.value || '',
+      fotos: photos.map(p => ({
+        data: p.data,
+        timestamp: p.timestamp
+      })),
+      total_fotos: photos.length
     };
 
     // Se for prédio, salva os campos com sufixo _predio
     if (window.ultimaEmpresaCadastrada?.tipo === 'predio') {
-      // Copia os dados do formulário para os campos _predio
       inspectionData.razao_social_predio = data.razao_social || window.ultimaEmpresaCadastrada.razao_social_predio;
       inspectionData.cnpj_predio = data.cnpj || window.ultimaEmpresaCadastrada.cnpj_predio;
       inspectionData.telefone_predio = data.telefone || window.ultimaEmpresaCadastrada.telefone_predio;
@@ -3198,12 +3363,14 @@ document.getElementById('finishInspectionBtn').addEventListener('click', async (
       inspectionData.numero_predio = data.numero_predio || window.ultimaEmpresaCadastrada.numero_predio;
     }
 
+    // Salva a inspeção com as fotos em base64
     await database.ref('inspections').push(inspectionData);
 
     showToast('Inspeção finalizada com sucesso!');
 
     closeModal('inspectionFormModal');
     form.reset();
+    limparTodasFotos();
     document.querySelectorAll('.conditional-section').forEach(sec => sec.classList.remove('visible'));
 
     // Limpa os dados temporários
@@ -3229,13 +3396,13 @@ document.getElementById('finishInspectionBtn').addEventListener('click', async (
   }
 });
 
-// Back to Form
+// ===== BACK TO FORM =====
 document.getElementById('backToFormBtn').addEventListener('click', () => {
   openModal('inspectionFormModal');
   navigateToSection('inspections');
 });
 
-// Download PDF
+// ===== DOWNLOAD PDF =====
 document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
   const button = document.getElementById('downloadPdfBtn');
   button.disabled = true;
@@ -3288,7 +3455,7 @@ document.getElementById('downloadPdfBtn').addEventListener('click', async () => 
   }
 });
 
-// Save Inspection
+// ===== SAVE INSPECTION =====
 document.getElementById('saveInspectionBtn').addEventListener('click', async () => {
   const button = document.getElementById('saveInspectionBtn');
   button.disabled = true;
@@ -3301,7 +3468,13 @@ document.getElementById('saveInspectionBtn').addEventListener('click', async () 
       tecnico_nome: currentUser.nome,
       data: new Date().toISOString(),
       completed: false,
-      tipo: window.ultimaEmpresaCadastrada?.tipo || currentInspectionData.tipo || 'empresa'
+      tipo: window.ultimaEmpresaCadastrada?.tipo || currentInspectionData.tipo || 'empresa',
+      observacoes: document.getElementById('inspecaoObservacoes')?.value || '',
+      fotos: photos.map(p => ({
+        data: p.data,
+        timestamp: p.timestamp
+      })),
+      total_fotos: photos.length
     };
 
     // Se for prédio, garante que os campos _predio estão salvos
@@ -3315,6 +3488,7 @@ document.getElementById('saveInspectionBtn').addEventListener('click', async () 
       inspectionData.numero_predio = currentInspectionData.numero_predio || window.ultimaEmpresaCadastrada.numero_predio;
     }
 
+    // Salva a inspeção com fotos em base64
     await database.ref('inspections').push(inspectionData);
 
     showToast('Inspeção salva com sucesso!');
@@ -3342,7 +3516,6 @@ document.getElementById('saveInspectionBtn').addEventListener('click', async () 
 // Variável de paginação para inspeções
 let currentInspectionPage = 1;
 const inspectionsPerPage = 7;
-
 // ============================================
 // FUNÇÃO DE CARREGAR INSPEÇÕES COM EXCLUIR
 // ============================================
@@ -3456,6 +3629,11 @@ async function loadInspections() {
           <span class="list-item-info-label">Sistemas:</span>
           <span class="list-item-info-value">${sistemas.join(', ') || '-'}</span>
         </div>
+
+        <div class="list-item-info-row">
+          <span class="list-item-info-label">Fotos:</span>
+          <span class="list-item-info-value">${insp.total_fotos || 0} foto(s)</span>
+        </div>
       </div>
 
       <div class="list-item-actions">
@@ -3464,6 +3642,9 @@ async function loadInspections() {
         </button>` : ''}
         <button class="btn-small btn-info" onclick="viewInspection('${insp.id}')">
           <i class="fas fa-eye"></i> Ver
+        </button>
+        <button class="btn-small btn-warning" onclick="viewPhotosInspection('${insp.id}')">
+          <i class="fas fa-images"></i> Fotos
         </button>
         <button class="btn-small btn-danger" onclick="deleteInspection('${insp.id}')">
           <i class="fas fa-trash"></i> Excluir
@@ -3575,6 +3756,127 @@ async function loadInspections() {
 }
 
 // ============================================
+// FUNÇÃO PARA VER FOTOS DA INSPEÇÃO
+// ============================================
+async function viewPhotosInspection(inspectionId) {
+  const snapshot = await database.ref('inspections/' + inspectionId).once('value');
+  const insp = snapshot.val();
+
+  if (!insp || !insp.fotos || insp.fotos.length === 0) {
+    showToast('Nenhuma foto encontrada nesta inspeção', 'warning');
+    return;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'photosModalOverlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+  `;
+
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #D4C29A;
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    animation: slideUp 0.3s ease-out;
+    box-sizing: border-box;
+  `;
+
+  let photosHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="color: #D4C29A; font-size: 24px; margin: 0; font-weight: 700;">
+        <i class="fas fa-images"></i> Fotos da Inspeção
+      </h2>
+      <button id="closePhotosBtn" style="
+        background: #ef4444;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <p style="color: #bbb; margin-bottom: 20px;">Total: ${insp.fotos.length} foto(s)</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+  `;
+
+  insp.fotos.forEach((foto, index) => {
+    photosHTML += `
+      <div style="
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #D4C29A;
+        cursor: pointer;
+        transition: all 0.3s;
+      " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 15px rgba(212, 194, 154, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+        <img src="${foto.data}" style="width: 100%; height: 150px; object-fit: cover; display: block;">
+        <div style="
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.7);
+          color: #D4C29A;
+          padding: 8px;
+          font-size: 12px;
+          text-align: center;
+        ">
+          ${foto.timestamp || 'Sem data'}
+        </div>
+      </div>
+    `;
+  });
+
+  photosHTML += `
+    </div>
+  `;
+
+  modal.innerHTML = photosHTML;
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  document.getElementById('closePhotosBtn').onclick = () => {
+    overlay.style.animation = 'fadeOut 0.3s ease-out';
+    setTimeout(() => overlay.remove(), 300);
+  };
+
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      overlay.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => overlay.remove(), 300);
+    }
+  };
+}
+
+// ============================================
 // FUNÇÃO DE EXCLUIR INSPEÇÃO
 // ============================================
 function deleteInspection(inspectionId) {
@@ -3582,7 +3884,7 @@ function deleteInspection(inspectionId) {
     const insp = snapshot.val();
 
     if (!insp) {
-      alert(' Inspeção não encontrada!');
+      showToast('Inspeção não encontrada!', 'error');
       return;
     }
 
@@ -3650,7 +3952,7 @@ function deleteInspection(inspectionId) {
         </p>
 
         <p style="color: #ef4444; font-size: 14px; font-weight: 600; margin: 0 0 30px 0;">
-           Esta ação não pode ser desfeita!
+          Esta ação não pode ser desfeita!
         </p>
 
         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
@@ -3716,7 +4018,7 @@ function deleteInspection(inspectionId) {
         await database.ref('inspections/' + inspectionId).remove();
         overlay.style.animation = 'fadeOut 0.3s ease-out';
         setTimeout(() => overlay.remove(), 300);
-        showSuccessMessage(' Inspeção excluída com sucesso!');
+        showToast('Inspeção excluída com sucesso!', 'success');
         loadInspections();
       } catch (error) {
         console.error('Erro ao excluir inspeção:', error);
@@ -3724,7 +4026,7 @@ function deleteInspection(inspectionId) {
         confirmBtn.style.opacity = '1';
         confirmBtn.style.cursor = 'pointer';
         confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Sim, Excluir';
-        alert(' Erro ao excluir inspeção: ' + error.message);
+        showToast('Erro ao excluir inspeção: ' + error.message, 'error');
       }
     };
 
@@ -14449,155 +14751,3 @@ function setupCalendarEventListeners() {
   exportBtn.addEventListener('click', exportarMesPDF);
 }
 
-  // IDs dos elementos
-  const startCameraBtn = document.getElementById('startCameraBtn');
-  const stopCameraBtn = document.getElementById('stopCameraBtn');
-  const capturePhotoBtn = document.getElementById('capturePhotoBtn');
-  const cameraPreview = document.getElementById('cameraPreview');
-  const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-  const photosGallery = document.getElementById('photosGallery');
-  const cameraCanvas = document.getElementById('cameraCanvas');
-  const ctx = cameraCanvas.getContext('2d');
-
-  let cameraStream = null;
-  let capturedPhotos = [];
-
-  // INICIAR CÂMERA
-  startCameraBtn.addEventListener('click', async () => {
-    try {
-      cameraStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-      });
-      
-      cameraPreview.srcObject = cameraStream;
-      cameraPreview.style.display = 'block';
-      cameraPlaceholder.style.display = 'none';
-      
-      startCameraBtn.style.display = 'none';
-      capturePhotoBtn.style.display = 'inline-flex';
-      stopCameraBtn.style.display = 'inline-flex';
-      
-      showToast('Câmera iniciada com sucesso', 'success');
-    } catch (error) {
-      showToast('Erro ao acessar câmera: ' + error.message, 'error');
-      console.error('Erro câmera:', error);
-    }
-  });
-
-  // CAPTURAR FOTO
-  capturePhotoBtn.addEventListener('click', () => {
-    try {
-      cameraCanvas.width = cameraPreview.videoWidth;
-      cameraCanvas.height = cameraPreview.videoHeight;
-      ctx.drawImage(cameraPreview, 0, 0);
-      
-      const photoData = cameraCanvas.toDataURL('image/jpeg', 0.95);
-      const timestamp = new Date().toLocaleString('pt-BR');
-      
-      capturedPhotos.push({
-        src: photoData,
-        timestamp: timestamp,
-        id: Date.now()
-      });
-      
-      renderPhotosGallery();
-      showToast('Foto capturada com sucesso!', 'success');
-    } catch (error) {
-      showToast('Erro ao capturar foto', 'error');
-      console.error('Erro captura:', error);
-    }
-  });
-
-  // PARAR CÂMERA
-  stopCameraBtn.addEventListener('click', () => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      cameraStream = null;
-    }
-    
-    cameraPreview.srcObject = null;
-    cameraPreview.style.display = 'none';
-    cameraPlaceholder.style.display = 'flex';
-    
-    startCameraBtn.style.display = 'inline-flex';
-    capturePhotoBtn.style.display = 'none';
-    stopCameraBtn.style.display = 'none';
-    
-    showToast('Câmera parada', 'success');
-  });
-
-  // RENDERIZAR GALERIA
-  function renderPhotosGallery() {
-    photosGallery.innerHTML = '';
-    
-    if (capturedPhotos.length === 0) {
-      photosGallery.innerHTML = '<p class="empty-state">Nenhuma foto capturada ainda</p>';
-      return;
-    }
-
-    capturedPhotos.forEach((photo) => {
-      const photoDiv = document.createElement('div');
-      photoDiv.className = 'photo-item';
-      photoDiv.dataset.photoId = photo.id;
-      
-      photoDiv.innerHTML = `
-        <img src="${photo.src}" alt="Foto capturada em ${photo.timestamp}" loading="lazy">
-        <div class="photo-info">${photo.timestamp}</div>
-        <button type="button" class="btn-delete-photo" title="Deletar foto">
-          <i class="fas fa-trash"></i>
-        </button>
-      `;
-      
-      photoDiv.querySelector('.btn-delete-photo').addEventListener('click', (e) => {
-        e.stopPropagation();
-        deletePhoto(photo.id);
-      });
-      
-      photosGallery.appendChild(photoDiv);
-    });
-  }
-
-  // DELETAR FOTO
-  function deletePhoto(photoId) {
-    capturedPhotos = capturedPhotos.filter(p => p.id !== photoId);
-    renderPhotosGallery();
-    showToast('Foto deletada', 'success');
-  }
-
-  // TOAST NOTIFICATION
-  function showToast(message, type = 'success') {
-    const existingToast = document.querySelector('.toast.show');
-    if (existingToast) {
-      existingToast.remove();
-    }
-
-    const toast = document.createElement('div');
-    toast.className = `toast show ${type}`;
-    toast.textContent = message;
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 90px;
-      left: 15px;
-      right: 15px;
-      background: #1a1a1a;
-      border: 2px solid ${type === 'success' ? '#28a745' : '#dc3545'};
-      border-radius: 8px;
-      padding: 15px;
-      color: #F5F5F5;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      z-index: 3000;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      animation: slideUp 0.3s ease;
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-      toast.remove();
-    }, 3000);
-  }
-
-  // INICIALIZAR
-  renderPhotosGallery();
