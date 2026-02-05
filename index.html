@@ -1210,21 +1210,17 @@
           <div class="inspection-section" id="section-fotos">
             <h3>Captura de Fotos</h3>
             <div class="camera-tab-content">
-              <div id="cameraContainer"
-                style="width: 100%; height: 250px; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid #D4C29A;">
-                <video id="videoStream" style="width: 100%; height: 100%; object-fit: cover;" playsinline></video>
-              </div>
               <div class="camera-controls"
-                style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px;"><button
-                  type="button" class="btn-camera btn-warning" id="startCameraBtn" onclick="startCamera(event)"
-                  style="padding: 10px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #D4C29A; color: #000;">
-                  <i class="fas fa-play"></i> Iniciar </button> <button type="button" class="btn-camera btn-success"
-                  id="capturePhotoBtn" onclick="capturePhoto(event)" disabled
-                  style="padding: 10px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #2a7a3f; color: white;">
-                  <i class="fas fa-camera"></i> Capturar </button> <button type="button" class="btn-camera btn-outline"
-                  id="stopCameraBtn" onclick="stopCamera(event)" disabled
-                  style="padding: 10px 8px; border: 1px solid #D4C29A; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; background: #2a2a2a; color: #D4C29A;">
-                  <i class="fas fa-stop"></i> Parar </button>
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                <button type="button" class="btn-camera btn-success" id="openCameraBtn"
+                  onclick="openNativeCamera(event)"
+                  style="padding: 12px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; background: #2a7a3f; color: white;">
+                  <i class="fas fa-camera"></i> Abrir Câmera
+                </button>
+                <button type="button" class="btn-camera btn-danger" id="clearPhotosBtn" onclick="limparTodasFotos()"
+                  style="padding: 12px 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; background: #B32117; color: white;">
+                  <i class="fas fa-trash"></i> Limpar
+                </button>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <label style="font-weight: 600; color: #D4C29A; font-size: 13px;">Fotos Capturadas:</label> <span
@@ -1241,6 +1237,7 @@
               </div>
             </div>
           </div>
+
           <!-- Conformidade Section -->
           <div class="inspection-section" id="section-conformidade">
             <h3>Conformidade Geral</h3>
