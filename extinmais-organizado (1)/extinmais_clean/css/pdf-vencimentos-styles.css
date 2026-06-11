@@ -1,0 +1,378 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #ffffff;
+  color: #1f2937;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* ========================================
+   PÁGINA A4
+======================================== */
+.pdf-page {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto;
+  background: #ffffff;
+  position: relative;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ========================================
+   HEADER — idêntico ao da brigada
+======================================== */
+.pdf-header {
+  background: linear-gradient(135deg, #8b0000 0%, #b91c1c 50%, #dc2626 100%);
+  color: white;
+  padding: 14px 20px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.logo-sub {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.header-badge {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 10px 0;
+}
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.header-info-left {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.92;
+}
+
+/* ========================================
+   BODY
+======================================== */
+.pdf-body {
+  flex: 1;
+  width: 100%;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+/* ========================================
+   SECTION CARD (igual ao estilo brigada)
+======================================== */
+.section-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.section-title {
+  background: #1f2937;
+  color: white;
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.section-title-row {
+  background: #1f2937;
+  color: white;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title-row .section-title {
+  background: transparent;
+  padding: 0;
+  color: white;
+}
+
+.resumo-badge-total {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ========================================
+   DADOS DA EMPRESA — grid 3 colunas
+======================================== */
+.dados-empresa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 0;
+}
+
+.dado-item {
+  padding: 9px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  border-right: 1px solid #f3f4f6;
+}
+
+.dado-item:nth-child(3n) {
+  border-right: none;
+}
+
+.dado-item.col-span-2 {
+  grid-column: span 2;
+}
+
+.dado-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dado-valor {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ========================================
+   RESUMO CARDS — igual brigada
+======================================== */
+.resumo-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.resumo-card {
+  padding: 14px 12px;
+  text-align: center;
+  border-right: 1px solid #f3f4f6;
+}
+
+.resumo-card:last-child {
+  border-right: none;
+}
+
+.resumo-card-valor {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.resumo-card-valor.total    { color: #1f2937; }
+.resumo-card-valor.em-dia   { color: #16a34a; }
+.resumo-card-valor.prox-vencer { color: #d97706; }
+.resumo-card-valor.vencidos { color: #dc2626; }
+
+.resumo-card-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ========================================
+   TABELA DE VENCIMENTOS — igual brigada
+======================================== */
+.tabela-vencimentos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.tabela-vencimentos thead tr {
+  background: #374151;
+  color: white;
+}
+
+.tabela-vencimentos thead th {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tabela-vencimentos tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tabela-vencimentos tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.tabela-vencimentos tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabela-vencimentos tbody td {
+  padding: 7px 10px;
+  color: #374151;
+  font-size: 10px;
+  vertical-align: middle;
+}
+
+/* Larguras das colunas */
+.col-num    { width: 28px; text-align: center; font-weight: 700; color: #9ca3af; }
+.col-nome   { min-width: 120px; font-weight: 600; }
+.col-func   { width: 90px; }
+.col-cpf    { width: 80px; }
+.col-bc     { width: 80px; }
+.col-tel    { width: 60px; text-align: center; }
+.col-status { width: 75px; text-align: center; }
+
+/* Badges de status */
+.badge-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.status-vencido {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.status-avencer {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fcd34d;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+.pdf-footer {
+  width: 100%;
+  padding: 10px 20px;
+  border-top: 3px solid #b91c1c;
+  text-align: center;
+  background: #fafafa;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.footer-brand {
+  font-size: 12px;
+  font-weight: 800;
+  color: #b91c1c;
+  margin-bottom: 4px;
+}
+
+.footer-info {
+  font-size: 9px;
+  color: #6b7280;
+  margin-bottom: 3px;
+}
+
+.footer-timestamp {
+  font-size: 8px;
+  color: #9ca3af;
+  font-style: italic;
+}
